@@ -16,12 +16,12 @@ Cara membuatnya :
 6. Kumpulkan 2 file yaitu ppt/pdf dan doc/pdf, di mana yg ppt utk presentasi dan yg doc utk makalah dan listing programnya serta ss
 
 ## Anggota Kelompok
-231232001 Chaerul Figri Argika
-231232020 Fadhillah Muhammad Wahyudi
-231232021 M Rivaldi Fahru Raihan
-231232027 Tegar Fiqri Budiman
-231232028 Falmesino Abdul Hamid
-231232030 Farhan Banyu Febryan
+- 231232001 Chaerul Figri Argika
+- 231232020 Fadhillah Muhammad Wahyudi
+- 231232021 M Rivaldi Fahru Raihan
+- 231232027 Tegar Fiqri Budiman
+- 231232028 Falmesino Abdul Hamid
+- 231232030 Farhan Banyu Febryan
 
 ## Dokumentasi
 Link ke Google Docs dan Google Sheets ditaro sini.
