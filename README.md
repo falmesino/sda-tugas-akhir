@@ -6,7 +6,9 @@ ITBS Swadharma.
 
 ## Tugas
 Buat SIM yg mengambil salah satu atau beberapa algoritma di struktur data. 
+
 Contoh : Membuat SI pengaturan lalu lintas dengan bubble sort
+
 Cara membuatnya :
 1. Terangkan dulu alasan membuat SIM tsb dan kaitannya dengan Bubble Sort
 2. Terangkan Bubble Sort
