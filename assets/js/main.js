@@ -232,6 +232,28 @@ document.addEventListener('DOMContentLoaded', function() {
     return false
   })
 
+  function linearSearch(data, targetName) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name.toLowerCase() === targetName.toLowerCase()) {
+        return data[i]
+      }
+    }
+    return null
+  }
+
+  formPencarian.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const inputKataKunci = formPencarian.querySelector('#search')
+    const kataKunci = inputKataKunci.value
+
+    const pencarian = linearSearch(items, kataKunci)
+
+    console.log('pencarian', pencarian)
+
+    return false
+  })
+
   resetForm()
   fetchData()
 
