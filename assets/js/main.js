@@ -249,9 +249,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const pencarian = linearSearch(items, kataKunci)
 
-    console.log('pencarian', pencarian)
+    if (pencarian) {
+      itemsPencarian = items.filter(item => item.id === pencarian.id)
+      renderItems(itemsPencarian)
+    }
 
     return false
+  })
+
+  formPencarian.addEventListener('reset', (e) => {
+    const inputKataKunci = formPencarian.querySelector('#search')
+
+    inputKataKunci.value = ''
+    renderItems(items)
   })
 
   resetForm()
