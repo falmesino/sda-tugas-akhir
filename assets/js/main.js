@@ -5,6 +5,9 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+  let items = []
+
+  const jumlahJajanan = document.querySelector('#jumlahJajanan')
   const containerJajanan = document.querySelector('#containerJajanan')
   const formSimpan = document.querySelector('#formSimpan')
   const formPencarian = document.querySelector('#formPencarian')
@@ -75,20 +78,26 @@ document.addEventListener('DOMContentLoaded', function() {
     containerJajanan.innerHTML += html
   }
 
+  function renderItems(items) {
+    clearContainerJajanan()
+
+    items.forEach((item, key) => {
+      renderItem(item, key)
+    })
+
+    jumlahJajanan.innerHTML = items.length
+  }
+
   async function fetchData() {
     try {
       const response = await fetch('data.json')
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
       }
-      const data = await response.json()
+      items = await response.json()
       // console.log('fetchData', data)
 
-      clearContainerJajanan()
-
-      data.forEach((item, key) => {
-        renderItem(item, key)
-      })
+      renderItems(items)
 
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -106,20 +115,54 @@ document.addEventListener('DOMContentLoaded', function() {
   formSimpan.addEventListener('submit', (e) => {
     e.preventDefault()
 
+    const inputId = formSimpan.querySelector('#id')
     const inputNama = formSimpan.querySelector('#nama')
     const inputHarga = formSimpan.querySelector('#harga')
     const inputTanggal = formSimpan.querySelector('#tanggal')
 
+    const isEdit = !inputId.parentElement.classList.contains('d-none')
+
     const payload = {
-      id: null,
+      id: Number(isEdit ? inputId.value : items.length + 1),
       name: inputNama.value,
-      price: inputHarga.value,
+      price: Number(inputHarga.value),
       date: inputTanggal.value
     }
 
-    console.log('form simpan', payload)
+    if (isEdit) {
+      items = items.map((item) => {
+        if (item.id === payload.id) {
+          return {
+            ...item,
+            ...payload
+          }
+        } else {
+          return item
+        }
+      })
+    } else {
+      items.push(payload)
+    }
+
+    console.log(`${isEdit ? 'Perbarui' : 'Tambah'}`, payload)
+
+    resetForm()
+    renderItems(items)
 
     return false
+  })
+
+  function resetForm() {
+    formSimpan.querySelector('#id').value = ''
+    formSimpan.querySelector('#nama').value = ''
+    formSimpan.querySelector('#harga').value = 1000
+    formSimpan.querySelector('#tanggal').value = tanggalHariIni()
+    formSimpan.querySelector('button[type="submit"]').innerHTML = 'Simpan'
+    formSimpan.querySelector('#id').parentElement.classList.add('d-none')
+  }
+
+  formSimpan.addEventListener('reset', (e) => {
+    resetForm()
   })
 
   containerJajanan.addEventListener('click', (e) => {
@@ -131,7 +174,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const confirm = window.confirm(`Hapus jajanan dengan id ${id}?`)
 
       if (confirm) {
-        console.log('hapus jajanan', id)
+        // console.log('hapus jajanan', id)
+        items = items.filter(item => item.id !== Number(id))
+
+        renderItems(items)
       }
       return false
     }
@@ -140,15 +186,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.target.matches('[data-action="edit"]')) {
       e.preventDefault()
       const id = e.target.getAttribute('data-id')
-      console.log('edit jajanan', id)
+      const item = items.find(item => item.id === Number(id))
+
+      formSimpan.querySelector('#id').value = item?.id || ''
+      formSimpan.querySelector('#nama').value = item?.name || ''
+      formSimpan.querySelector('#harga').value = item?.price || 0
+      formSimpan.querySelector('#tanggal').value = item?.date || ''
+      formSimpan.querySelector('button[type="submit"]').innerHTML = 'Perbarui'
+      formSimpan.querySelector('#id').parentElement.classList.remove('d-none')
+
+      // console.log('edit jajanan', item)
       return false
     }
   })
 
-  // Isi tanggal hari ini di inputan tanggal by default
-  formSimpan.querySelector('#tanggal').value = tanggalHariIni()
 
-  // Ambil data.json
+  resetForm()
   fetchData()
 
 })

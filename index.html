@@ -64,6 +64,10 @@
           <div class="card">
             <div class="card-body">
               <form role="form" action="" method="get" id="formSimpan">
+                <div class="form-floating d-none mb-3">
+                  <input type="text" class="form-control" id="id" tabindex="-1" required placeholder="ID" disabled readonly />
+                  <label for="name">ID</label>
+                </div><!--/ .form-floating -->
                 <div class="form-floating mb-3">
                   <input type="text" class="form-control" id="nama" tabindex="1" required placeholder="Nama" />
                   <label for="name">Nama</label>
@@ -110,7 +114,7 @@
 
               <div class="w-full d-flex flex-row align-items-center justify-content-end">
                 <p class="flex-grow-1 m-0 p-0">
-                  Daftar Jajanan
+                  Daftar Jajanan (<span id="jumlahJajanan">0</span>)
                 </p>
                 <button type="button" class="btn btn-sm btn-dark" id="buttonUrutkan">
                   Urutkan
