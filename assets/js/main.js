@@ -252,6 +252,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pencarian) {
       itemsPencarian = items.filter(item => item.id === pencarian.id)
       renderItems(itemsPencarian)
+    } else {
+      window.alert(`Jajanan dengan nama ${kataKunci} tidak ditemukan!`)
     }
 
     return false
