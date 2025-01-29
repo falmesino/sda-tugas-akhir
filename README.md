@@ -27,3 +27,10 @@ Cara membuatnya :
 
 ## Dokumentasi
 Link ke Google Docs dan Google Sheets ditaro sini.
+
+## Ide Program
+
+**JajanTracker** adalah sebuah program di mana pengguna bisa mencatat pengeluaran untuk jajanan mereka.
+Algoritma yang diterapkan pada program ini adalah:
+- **Bubble Sort** yang akan digunakan untuk mengurutkan jajanan berdasarkan harga atau tanggal.
+- **Linear Search** yang akan digunakan untuk mencari jajanan.
