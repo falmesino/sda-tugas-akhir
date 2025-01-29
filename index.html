@@ -64,18 +64,18 @@
           <div class="card">
             <div class="card-body">
               <form role="form" action="" method="get" id="formSimpan">
-                <div class="mb-3">
-                  <label class="form-label" for="name">Nama</label>
-                  <input type="text" class="form-control" id="name" tabindex="1" required placeholder="Nama" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="harga">Harga</label>
-                  <input type="number" class="form-control" id="harga" tabindex="2" required placeholder="Harga" min="1" step="1" value="1"/>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="tanggal">Tanggal</label>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="nama" tabindex="1" required placeholder="Nama" />
+                  <label for="name">Nama</label>
+                </div><!--/ .form-floating -->
+                <div class="form-floating mb-3">
+                  <input type="number" class="form-control" id="harga" tabindex="2" required placeholder="Harga" min="100" step="100" value="1000"/>
+                  <label for="harga">Harga</label>
+                </div><!--/ .form-floating -->
+                <div class="form-floating mb-3">
                   <input type="date" class="form-control" id="tanggal" tabindex="3" required placeholder="Tanggal" />
-                </div>
+                  <label for="tanggal">Tanggal</label>
+                </div><!--/ .form-floating -->
                 <div class="d-flex flex-row align-items-center justify-content-end gap-2">
                   <button type="reset" class="btn btn-light" tabindex="5">Reset</button>
                   <button type="submit" class="btn btn-dark" tabindex="4">Simpan</button>
@@ -92,7 +92,10 @@
               <form role="form" method="get" action="" id="formPencarian">
                 <div class="row">
                   <div class="col-9">
-                    <input type="search" class="form-control" placeholder="Cari Jajanan" />
+                    <div class="form-floating">
+                      <input type="search" id="search" class="form-control" placeholder="Cari Jajanan" required />
+                      <label for="search">Cari Jajanan</label>
+                    </div><!--/ .form-floating -->
                   </div><!--/ .col-8 -->
                   <div class="col-3 d-grid">
                     <button type="submit" class="btn btn-dark w-full">Cari</button>

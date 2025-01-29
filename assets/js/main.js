@@ -16,11 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function formatTanggal(date) {
     if (!dateFns || !dateFns.locale.id) {
-      console.error("Error loading date-fns or locale");
-      return date;
+      console.error("Error loading date-fns or locale")
+      return date
     }
 
-    const formattedDate = dateFns.format(date, "EEEE, dd MMMM yyyy", { locale: dateFns.locale.id });
+    const formattedDate = dateFns.format(date, "EEEE, dd MMMM yyyy", { locale: dateFns.locale.id })
+    return formattedDate
+  }
+
+  function tanggalHariIni() {
+    const date = new Date()
+    const formattedDate = dateFns.format(date, 'yyyy-MM-dd')
+
     return formattedDate
   }
 
@@ -54,40 +61,94 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
           </div><!--/ .row -->
           <div class="border-top border-dark-subtle py-3 px-4">
-            <button type="button" class="btn btn-sm btn-dark">
+            <button type="button" class="btn btn-sm btn-dark" data-action="edit" data-id="${data?.id || 0}">
               Perbarui
             </button>
-            <button type="button" class="btn btn-sm btn-dark">
+            <button type="button" class="btn btn-sm btn-dark" data-action="hapus" data-id="${data?.id || 0}">
               Hapus
             </button>
           </div>
         </div><!--/ .card-body -->
       </div><!--/ .card -->
-    `;
+    `
 
-    containerJajanan.innerHTML += html;
+    containerJajanan.innerHTML += html
   }
 
   async function fetchData() {
     try {
-      const response = await fetch('data.json');
+      const response = await fetch('data.json')
       if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error(`HTTP error! Status: ${response.status}`)
       }
-      const data = await response.json();
-      // console.log('fetchData', data);
+      const data = await response.json()
+      // console.log('fetchData', data)
 
-      clearContainerJajanan();
+      clearContainerJajanan()
 
       data.forEach((item, key) => {
         renderItem(item, key)
       })
 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error)
     }
   }
-  
-  fetchData();
 
-});
+  formPencarian.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const inputPencarian = formPencarian.querySelector('#search')
+    const kataKunci = inputPencarian.value
+    console.log('formPencarian', kataKunci)
+    return false
+  })
+  
+  formSimpan.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    const inputNama = formSimpan.querySelector('#nama')
+    const inputHarga = formSimpan.querySelector('#harga')
+    const inputTanggal = formSimpan.querySelector('#tanggal')
+
+    const payload = {
+      id: null,
+      name: inputNama.value,
+      price: inputHarga.value,
+      date: inputTanggal.value
+    }
+
+    console.log('form simpan', payload)
+
+    return false
+  })
+
+  containerJajanan.addEventListener('click', (e) => {
+
+    // Aksi hapus jajanan
+    if (e.target.matches('[data-action="hapus"')) {
+      e.preventDefault()
+      const id = e.target.getAttribute('data-id')
+      const confirm = window.confirm(`Hapus jajanan dengan id ${id}?`)
+
+      if (confirm) {
+        console.log('hapus jajanan', id)
+      }
+      return false
+    }
+
+    // Aksi edit jajanan
+    if (e.target.matches('[data-action="edit"]')) {
+      e.preventDefault()
+      const id = e.target.getAttribute('data-id')
+      console.log('edit jajanan', id)
+      return false
+    }
+  })
+
+  // Isi tanggal hari ini di inputan tanggal by default
+  formSimpan.querySelector('#tanggal').value = tanggalHariIni()
+
+  // Ambil data.json
+  fetchData()
+
+})
