@@ -34,6 +34,15 @@ document.addEventListener('DOMContentLoaded', function() {
     return formattedDate
   }
 
+  function resetForm() {
+    formSimpan.querySelector('#id').value = ''
+    formSimpan.querySelector('#nama').value = ''
+    formSimpan.querySelector('#harga').value = 1000
+    formSimpan.querySelector('#tanggal').value = tanggalHariIni()
+    formSimpan.querySelector('button[type="submit"]').innerHTML = 'Simpan'
+    formSimpan.querySelector('#id').parentElement.classList.add('d-none')
+  }
+
   function clearContainerJajanan() {
     containerJajanan.innerHTML = ''
   }
@@ -144,22 +153,13 @@ document.addEventListener('DOMContentLoaded', function() {
       items.push(payload)
     }
 
-    console.log(`${isEdit ? 'Perbarui' : 'Tambah'}`, payload)
+    // console.log(`${isEdit ? 'Perbarui' : 'Tambah'}`, payload)
 
     resetForm()
     renderItems(items)
 
     return false
   })
-
-  function resetForm() {
-    formSimpan.querySelector('#id').value = ''
-    formSimpan.querySelector('#nama').value = ''
-    formSimpan.querySelector('#harga').value = 1000
-    formSimpan.querySelector('#tanggal').value = tanggalHariIni()
-    formSimpan.querySelector('button[type="submit"]').innerHTML = 'Simpan'
-    formSimpan.querySelector('#id').parentElement.classList.add('d-none')
-  }
 
   formSimpan.addEventListener('reset', (e) => {
     resetForm()
@@ -200,6 +200,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })
 
+  function bubbleSort(data, field = 'price', direction = 'asc') {
+    let n = data.length
+    let swapped
+
+    do {
+      swapped = false
+      for (let i = 0; i < n - 1; i++) {
+        if (direction === 'asc') {
+          if (data[i][field] > data[i + 1][field]) {
+            [data[i], data[i + 1]] = [data[i + 1], data[i]]
+            swapped = true
+          }
+        } else {
+          if (data[i][field] < data[i + 1][field]) {
+            [data[i], data[i + 1]] = [data[i + 1], data[i]]
+            swapped = true
+          }
+        }
+      }
+      n--
+    } while (swapped)
+
+    return data
+  }
+
+  buttonUrutkan.addEventListener('click', (e) => {
+    e.preventDefault()
+    items = bubbleSort(items, 'price', 'desc')
+    renderItems(items)
+    return false
+  })
 
   resetForm()
   fetchData()
