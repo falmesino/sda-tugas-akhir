@@ -7,12 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let items = []
   let latestId = 0
-
+  
+  const LOCAL_STORAGE_KEY = 'JAJANAN_TRACKER'
   const jumlahJajanan = document.querySelector('#jumlahJajanan')
   const containerJajanan = document.querySelector('#containerJajanan')
   const formSimpan = document.querySelector('#formSimpan')
   const formPencarian = document.querySelector('#formPencarian')
   const formPengurutan = document.querySelector('#formPengurutan')
+  const buttonClearLocalStorage = document.querySelector('#buttonClearLocalStorage')
 
   function formatRupiah(string) {
     return "Rp" + string.toLocaleString("id-ID") + ",-"
@@ -136,23 +138,58 @@ document.addEventListener('DOMContentLoaded', function() {
     return items.length > 0 ? Math.max(...items.map(item => item.id)) : 0
   }
 
-  async function fetchData() {
-    try {
-      const response = await fetch('data.json')
-      if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      items = await response.json()
-      latestId = getLatestId(items)
-      bubbleSort(items, 'id', 'desc')
-      // console.log('fetchData', data)
-
-      renderItems(items)
-
-    } catch (error) {
-      console.error('Error fetching data:', error)
+  function saveToLocalStorage(items) {
+    if (items) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items))
     }
   }
+
+  function loadFromLocalStorage() {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY)
+    return data ? JSON.parse(data) : null
+  }
+
+  function clearLocalStorage() {
+    localStorage.removeItem(LOCAL_STORAGE_KEY)
+    location.reload()
+  }
+
+  async function fetchData() {
+    const localStorageData = loadFromLocalStorage()
+
+    if (localStorageData) {
+      console.log('Data sudah ada di localStorage')
+      items = localStorageData
+    } else {
+      console.log('Data belum ada di localStorage, isi dari data.json')
+      try {
+        const response = await fetch('data.json')
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        items = await response.json()
+        saveToLocalStorage(items)
+        // console.log('fetchData', data)
+  
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+  
+    latestId = getLatestId(items)
+    bubbleSort(items, 'id', 'desc')
+    renderItems(items)
+  }
+
+  buttonClearLocalStorage.addEventListener('click', (e) => {
+    e.preventDefault()
+    const confirm = window.confirm("Kosongkan LocalStorage?")
+
+    if (confirm) {
+      clearLocalStorage()
+    }
+    return false
+  })
 
   formPencarian.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -238,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // console.log(`${isEdit ? 'Perbarui' : 'Tambah'}`, payload)
 
     resetForm()
+    saveToLocalStorage(items)
     renderItems(items)
 
     return false
@@ -259,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // console.log('hapus jajanan', id)
         items = items.filter(item => item.id !== Number(id))
         getLatestId(items)
+        saveToLocalStorage(items)
         renderItems(items)
       }
       return false
@@ -284,5 +323,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
   resetForm()
   fetchData()
-
 })
