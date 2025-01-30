@@ -5,6 +5,9 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+  /**
+   * Deklarasi variabel
+   */
   let items = []
   let latestId = 0
   
@@ -16,10 +19,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const formPengurutan = document.querySelector('#formPengurutan')
   const buttonClearLocalStorage = document.querySelector('#buttonClearLocalStorage')
 
+  /**
+   * Fungsi untuk melakukan format harga yang sebelumnya
+   * hanya angka biasa menjadi format mata uang rupiah
+   * yang mudah dibaca oleh manusia
+   */
   function formatRupiah(string) {
     return "Rp" + string.toLocaleString("id-ID") + ",-"
   }
 
+  /**
+   * Fungsi untuk melakukan format tanggal menjadi
+   * format yang mudah dibaca oleh manusia
+   * dari '2024-10-30' menjadi 'Senin, 30 Oktober 2023'
+   */
   function formatTanggal(date) {
     if (!dateFns || !dateFns.locale.id) {
       console.error("Error loading date-fns or locale")
@@ -30,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return formattedDate
   }
 
+  /**
+   * Fungsi untuk mendapatkan tanggal hari ini
+   * Menggunakan dateFns untuk mengubah formatnya menjadi
+   * Tahun-Bulan-Hari
+   */
   function tanggalHariIni() {
     const date = new Date()
     const formattedDate = dateFns.format(date, 'yyyy-MM-dd')
@@ -71,6 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
     return null
   }
 
+  /**
+   * Mengosongkan form simpan dan mengatur isi dari inputan tanggal
+   * menjadi tanggal hari ini
+   */
   function resetForm() {
     formSimpan.querySelector('#id').value = ''
     formSimpan.querySelector('#nama').value = ''
@@ -80,10 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
     formSimpan.querySelector('#id').parentElement.classList.add('d-none')
   }
 
+  /**
+   * Mengosonkgan penampung data jajanan
+   */
   function clearContainerJajanan() {
     containerJajanan.innerHTML = ''
   }
 
+  /**
+   * Menampilkan data jajanan 
+   */
   function renderItem(data, key) {
     const tanggalFormat = data?.date ? formatTanggal(data?.date) : '-'
     const hargaFormat = formatRupiah(data?.price || 0)
@@ -124,6 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
     containerJajanan.innerHTML += html
   }
 
+  /**
+   * Fungsi menampilkan data jajanan
+   * - Bersihkan dulu data sebelumnya di tampilan
+   * - Isi kembali datanya sesuai data dari parameter items 
+   */
   function renderItems(items) {
     clearContainerJajanan()
 
@@ -134,21 +167,25 @@ document.addEventListener('DOMContentLoaded', function() {
     jumlahJajanan.innerHTML = items.length
   }
 
+  // Mendapatkan id terakhir supaya tidak ada duplikat
   function getLatestId(items) {
     return items.length > 0 ? Math.max(...items.map(item => item.id)) : 0
   }
 
+  // Menyimpan data ke dalam localStorage
   function saveToLocalStorage(items) {
     if (items) {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(items))
     }
   }
 
+  // Membaca data dari localStorage
   function loadFromLocalStorage() {
     const data = localStorage.getItem(LOCAL_STORAGE_KEY)
     return data ? JSON.parse(data) : null
   }
 
+  // Membersihkan localStorage
   function clearLocalStorage() {
     localStorage.removeItem(LOCAL_STORAGE_KEY)
     location.reload()
@@ -181,6 +218,11 @@ document.addEventListener('DOMContentLoaded', function() {
     renderItems(items)
   }
 
+  /**
+   * Tombol 'Bersihkan LocalStorage'
+   * Berfungsi untuk mengosongkan data di localStorage
+   * lalu memuat ulang data bawaan dari ./data.json
+   */
   buttonClearLocalStorage.addEventListener('click', (e) => {
     e.preventDefault()
     const confirm = window.confirm("Kosongkan LocalStorage?")
@@ -191,6 +233,10 @@ document.addEventListener('DOMContentLoaded', function() {
     return false
   })
 
+  /**
+   * Formulir Pencarian
+   * Mencari data jajanan menggunakan fungsi linearSearch()
+   */
   formPencarian.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -209,6 +255,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return false
   })
 
+  /**
+   * Event ketika formulir pencarian direset
+   * - Mengosonkan inputan kata kunci
+   * - Menampilkan kembali semua data jajanan
+   */
   formPencarian.addEventListener('reset', (e) => {
     const inputKataKunci = formPencarian.querySelector('#search')
 
@@ -216,6 +267,11 @@ document.addEventListener('DOMContentLoaded', function() {
     renderItems(items)
   })
 
+  /**
+   * Event ketika formulir pengurutan disubmit
+   * Mengurutkan data jajanan berdasarkna kolom yang dipilih (field)
+   * dan arah pengurutan (direction)
+   */
   formPengurutan.addEventListener('submit', (e) => {
     e.preventDefault()
     const selectField = formPengurutan.querySelector('#field')
@@ -227,18 +283,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const itemsTemp = bubbleSort(items, field, direction)
     renderItems(itemsTemp)
 
-    console.log('urutkan', {
-      field,
-      direction
-    })
     return false
   })
 
+  /**
+   * Event ketika formulir pengurutan direset
+   */
   formPengurutan.addEventListener('reset', (e) => {
     console.log('reset sort')
     renderItems(items)
   })
   
+  /**
+   * Event ketika formulir simpan disubmit
+   * Jika inputan id ada, berarti sedang edit
+   * Jika inputan id tidak ada, berarti sedang tambah baru
+   * Setelah berhasil simpan data ke localStorage
+   * Urutkan data jajanan berdasarkan id secara descending (turun)
+   * Tampilkan data jajanan terbaru
+   */
   formSimpan.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -281,10 +344,19 @@ document.addEventListener('DOMContentLoaded', function() {
     return false
   })
 
+  /**
+   * Event ketika formulir simpan direset
+   */
   formSimpan.addEventListener('reset', (e) => {
     resetForm()
   })
 
+  /**
+   * Event ketika data jajanan diklik
+   * Jika yang diklik adalah tombol hapus, ya hapus data
+   * Jika yang diklik adalah tombol edit, isi data di formulir simpan
+   * Keluarkan inputan ID untuk mengetahui kalau kita mau edit data
+   */
   containerJajanan.addEventListener('click', (e) => {
 
     // Aksi hapus jajanan
@@ -316,11 +388,16 @@ document.addEventListener('DOMContentLoaded', function() {
       formSimpan.querySelector('button[type="submit"]').innerHTML = 'Perbarui'
       formSimpan.querySelector('#id').parentElement.classList.remove('d-none')
 
-      // console.log('edit jajanan', item)
       return false
     }
   })
 
+  /**
+   * Event ketika aplikasi baru dijalankan
+   * - Bersihkan form
+   * - Ambil data dari localStorage atau ./data.json jika 
+   *   di localStorage belum ada datanya
+   */
   resetForm()
   fetchData()
 })
