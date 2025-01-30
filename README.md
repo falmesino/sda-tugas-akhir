@@ -34,3 +34,12 @@ Link ke Google Docs dan Google Sheets ditaro sini.
 Algoritma yang diterapkan pada program ini adalah:
 - **Bubble Sort** yang akan digunakan untuk mengurutkan jajanan berdasarkan harga atau tanggal.
 - **Linear Search** yang akan digunakan untuk mencari jajanan.
+
+## Cara Penggunaan
+- Clone repository ini ke dalam perangkat lokal Anda.
+- Buka Terminal
+- Masuk ke dalam direktori project ini
+- Install depedencies dengan `$ yarn install`
+- Jalankan program dengan `$ yarn d`
+- Buka alamat yang ditampilkan di Terminal (mestinya `http://127.0.0.1:8080`)
+- Atau buka alamat ini saja kalau mau langsung https://sda-ta-kelompok-1.vercel.app/
