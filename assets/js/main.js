@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
   let items = []
+  let latestId = 0
 
   const jumlahJajanan = document.querySelector('#jumlahJajanan')
   const containerJajanan = document.querySelector('#containerJajanan')
@@ -131,6 +132,10 @@ document.addEventListener('DOMContentLoaded', function() {
     jumlahJajanan.innerHTML = items.length
   }
 
+  function getLatestId(items) {
+    return items.length > 0 ? Math.max(...items.map(item => item.id)) : 0
+  }
+
   async function fetchData() {
     try {
       const response = await fetch('data.json')
@@ -138,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
           throw new Error(`HTTP error! Status: ${response.status}`)
       }
       items = await response.json()
+      latestId = getLatestId(items)
+      bubbleSort(items, 'id', 'desc')
       // console.log('fetchData', data)
 
       renderItems(items)
@@ -206,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isEdit = !inputId.parentElement.classList.contains('d-none')
 
     const payload = {
-      id: Number(isEdit ? inputId.value : items.length + 1),
+      id: Number(isEdit ? inputId.value : getLatestId(items) + 1),
       name: inputNama.value,
       price: Number(inputHarga.value),
       date: inputTanggal.value
@@ -225,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
     } else {
       items.push(payload)
+      bubbleSort(items, 'id', 'desc')
     }
 
     // console.log(`${isEdit ? 'Perbarui' : 'Tambah'}`, payload)
@@ -250,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (confirm) {
         // console.log('hapus jajanan', id)
         items = items.filter(item => item.id !== Number(id))
-
+        getLatestId(items)
         renderItems(items)
       }
       return false
