@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const containerJajanan = document.querySelector('#containerJajanan')
   const formSimpan = document.querySelector('#formSimpan')
   const formPencarian = document.querySelector('#formPencarian')
-  const buttonUrutkan = document.querySelector('#buttonUrutkan')
+  const formPengurutan = document.querySelector('#formPengurutan')
 
   function formatRupiah(string) {
     return "Rp" + string.toLocaleString("id-ID") + ",-"
@@ -32,6 +32,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const formattedDate = dateFns.format(date, 'yyyy-MM-dd')
 
     return formattedDate
+  }
+
+  function bubbleSort(data, field = 'price', direction = 'asc') {
+    let n = data.length
+    let swapped
+
+    do {
+      swapped = false
+      for (let i = 0; i < n - 1; i++) {
+        if (direction === 'asc') {
+          if (data[i][field] > data[i + 1][field]) {
+            [data[i], data[i + 1]] = [data[i + 1], data[i]]
+            swapped = true
+          }
+        } else {
+          if (data[i][field] < data[i + 1][field]) {
+            [data[i], data[i + 1]] = [data[i + 1], data[i]]
+            swapped = true
+          }
+        }
+      }
+      n--
+    } while (swapped)
+
+    return data
+  }
+
+  function linearSearch(data, targetName) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].name.toLowerCase() === targetName.toLowerCase()) {
+        return data[i]
+      }
+    }
+    return null
   }
 
   function resetForm() {
@@ -115,10 +149,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
   formPencarian.addEventListener('submit', (e) => {
     e.preventDefault()
-    const inputPencarian = formPencarian.querySelector('#search')
-    const kataKunci = inputPencarian.value
-    console.log('formPencarian', kataKunci)
+
+    const inputKataKunci = formPencarian.querySelector('#search')
+    const kataKunci = inputKataKunci.value
+
+    const pencarian = linearSearch(items, kataKunci)
+
+    if (pencarian) {
+      itemsPencarian = items.filter(item => item.id === pencarian.id)
+      renderItems(itemsPencarian)
+    } else {
+      window.alert(`Jajanan dengan nama ${kataKunci} tidak ditemukan!`)
+    }
+
     return false
+  })
+
+  formPencarian.addEventListener('reset', (e) => {
+    const inputKataKunci = formPencarian.querySelector('#search')
+
+    inputKataKunci.value = ''
+    renderItems(items)
+  })
+
+  formPengurutan.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const selectField = formPengurutan.querySelector('#field')
+    const selectDirection = formPengurutan.querySelector('#direction')
+
+    const field = selectField.value
+    const direction = selectDirection.value
+
+    const itemsTemp = bubbleSort(items, field, direction)
+    renderItems(itemsTemp)
+
+    console.log('urutkan', {
+      field,
+      direction
+    })
+    return false
+  })
+
+  formPengurutan.addEventListener('reset', (e) => {
+    console.log('reset sort')
+    renderItems(items)
   })
   
   formSimpan.addEventListener('submit', (e) => {
@@ -198,72 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // console.log('edit jajanan', item)
       return false
     }
-  })
-
-  function bubbleSort(data, field = 'price', direction = 'asc') {
-    let n = data.length
-    let swapped
-
-    do {
-      swapped = false
-      for (let i = 0; i < n - 1; i++) {
-        if (direction === 'asc') {
-          if (data[i][field] > data[i + 1][field]) {
-            [data[i], data[i + 1]] = [data[i + 1], data[i]]
-            swapped = true
-          }
-        } else {
-          if (data[i][field] < data[i + 1][field]) {
-            [data[i], data[i + 1]] = [data[i + 1], data[i]]
-            swapped = true
-          }
-        }
-      }
-      n--
-    } while (swapped)
-
-    return data
-  }
-
-  buttonUrutkan.addEventListener('click', (e) => {
-    e.preventDefault()
-    items = bubbleSort(items, 'price', 'desc')
-    renderItems(items)
-    return false
-  })
-
-  function linearSearch(data, targetName) {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].name.toLowerCase() === targetName.toLowerCase()) {
-        return data[i]
-      }
-    }
-    return null
-  }
-
-  formPencarian.addEventListener('submit', (e) => {
-    e.preventDefault()
-
-    const inputKataKunci = formPencarian.querySelector('#search')
-    const kataKunci = inputKataKunci.value
-
-    const pencarian = linearSearch(items, kataKunci)
-
-    if (pencarian) {
-      itemsPencarian = items.filter(item => item.id === pencarian.id)
-      renderItems(itemsPencarian)
-    } else {
-      window.alert(`Jajanan dengan nama ${kataKunci} tidak ditemukan!`)
-    }
-
-    return false
-  })
-
-  formPencarian.addEventListener('reset', (e) => {
-    const inputKataKunci = formPencarian.querySelector('#search')
-
-    inputKataKunci.value = ''
-    renderItems(items)
   })
 
   resetForm()
