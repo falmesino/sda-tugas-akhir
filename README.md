@@ -19,11 +19,13 @@ Cara membuatnya :
 
 ## Anggota Kelompok
 - 231232001 Chaerul Figri Argika
+- 231232014 Muhamad Kosasih
 - 231232020 Fadhillah Muhammad Wahyudi
 - 231232021 M Rivaldi Fahru Raihan
 - 231232027 Tegar Fiqri Budiman
 - 231232028 Falmesino Abdul Hamid
 - 231232030 Farhan Banyu Febryan
+- Razdhan Hadi
 
 ## Dokumentasi
 Link ke Google Docs dan Google Sheets ditaro sini.
