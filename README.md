@@ -25,7 +25,7 @@ Cara membuatnya :
 - 231232027 Tegar Fiqri Budiman
 - 231232028 Falmesino Abdul Hamid
 - 231232030 Farhan Banyu Febryan
-- Razdhan Hadi
+- 23123XXXX Razdhan Hadi
 
 ## Dokumentasi
 Link ke Google Docs dan Google Sheets ditaro sini.
